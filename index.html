@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GCP Shop</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f9f9f9; color: #333; }
+
+    /* Navbar */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid #e0e0e0;
+      background: #ffffff;
+    }
+    .logo { font-size: 20px; font-weight: bold; color: #333; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { font-size: 14px; color: #666; text-decoration: none; cursor: pointer; }
+    .nav-links a:hover { color: #333; }
+    .cart-btn {
+      font-size: 14px;
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+    }
+    .cart-btn:hover { background: #f0f0f0; }
+
+    /* Hero */
+    .hero {
+      padding: 60px 32px;
+      text-align: center;
+      background: #eef2ff;
+    }
+    .hero h1 { font-size: 32px; font-weight: bold; margin-bottom: 12px; }
+    .hero p { font-size: 16px; color: #555; margin-bottom: 24px; }
+    .hero-btn {
+      padding: 12px 28px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .hero-btn:hover { background: #555; }
+
+    /* Products Section */
+    .section { padding: 40px 32px; }
+    .section-title { font-size: 20px; font-weight: bold; margin-bottom: 24px; }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    /* Product Card */
+    .product-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .product-img {
+      width: 100%;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      background: #f5f5f5;
+    }
+    .product-info { padding: 14px; }
+    .product-name { font-size: 15px; font-weight: bold; margin-bottom: 4px; }
+    .product-price { font-size: 14px; color: #888; margin-bottom: 12px; }
+    .add-btn {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .add-btn:hover { background: #f0f0f0; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid #e0e0e0;
+      padding: 20px 32px;
+      text-align: center;
+      font-size: 13px;
+      color: #999;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">GCP Shop</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+    </div>
+    <button class="cart-btn">Cart (0)</button>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Welcome to GCP Shop</h1>
+    <p>Discover amazing products at great prices</p>
+    <button class="hero-btn" onclick="window.location.href='products.html'">Shop now</button>
+  </div>
+
+  <!-- Featured Products -->
+  <div class="section">
+    <div class="section-title">Featured products</div>
+    <div class="products">
+
+      <div class="product-card">
+        <div class="product-img">👟</div>
+        <div class="product-info">
+          <div class="product-name">Classic Sneakers</div>
+          <div class="product-price">$59.99</div>
+          <button class="add-btn">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">👜</div>
+        <div class="product-info">
+          <div class="product-name">Tote Bag</div>
+          <div class="product-price">$34.99</div>
+          <button class="add-btn">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">🎧</div>
+        <div class="product-info">
+          <div class="product-name">Headphones</div>
+          <div class="product-price">$89.99</div>
+          <button class="add-btn">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">⌚</div>
+        <div class="product-info">
+          <div class="product-name">Smart Watch</div>
+          <div class="product-price">$129.99</div>
+          <button class="add-btn">Add to cart</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2026 GCP Shop · Built on Google Cloud Platform
+  </footer>
+
+</body>
+</html>
