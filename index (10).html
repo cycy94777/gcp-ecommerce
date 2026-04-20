@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZBestBuy — Tech for Everyone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sky: #0ea5e9;
+      --sky-dark: #0369a1;
+      --sky-light: #e0f2fe;
+      --ink: #0f172a;
+      --ink-soft: #334155;
+      --mist: #f1f5f9;
+      --white: #ffffff;
+      --accent: #f97316;
+      --accent-light: #fff7ed;
+      --border: #e2e8f0;
+      --shadow: 0 4px 24px rgba(14,165,233,0.10);
+      --radius: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.5rem;
+      color: var(--sky);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-logo span { color: var(--ink); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--ink-soft); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--sky); }
+    .nav-actions { display: flex; align-items: center; gap: 16px; }
+    .btn-cart {
+      background: var(--sky);
+      color: white; border: none; border-radius: 10px;
+      padding: 9px 22px; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: background .2s, transform .15s;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-cart:hover { background: var(--sky-dark); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 88vh;
+      display: flex; align-items: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #fef3c7 100%);
+    }
+    .hero-bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.18;
+    }
+    .hero-bg-circle.c1 {
+      width: 700px; height: 700px;
+      background: var(--sky);
+      top: -200px; right: -150px;
+    }
+    .hero-bg-circle.c2 {
+      width: 400px; height: 400px;
+      background: var(--accent);
+      bottom: -100px; left: -80px;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 1200px; margin: 0 auto;
+      padding: 80px 40px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    }
+    .hero-text { animation: fadeUp .7s ease both; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent-light); color: var(--accent);
+      border: 1px solid #fed7aa;
+      border-radius: 100px; padding: 6px 16px;
+      font-size: 0.8rem; font-weight: 600;
+      margin-bottom: 24px; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .hero-badge::before { content: "⚡"; }
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800; line-height: 1.08;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .hero-title em { color: var(--sky); font-style: normal; }
+    .hero-subtitle {
+      font-size: 1.125rem; color: var(--ink-soft);
+      line-height: 1.7; margin-bottom: 36px; font-weight: 300;
+    }
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--sky); color: white;
+      border: none; border-radius: 12px;
+      padding: 14px 32px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: all .2s; text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { background: var(--sky-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(14,165,233,0.35); }
+    .btn-secondary {
+      background: transparent; color: var(--ink);
+      border: 2px solid var(--border); border-radius: 12px;
+      padding: 14px 32px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: all .2s; text-decoration: none; display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--sky); color: var(--sky); transform: translateY(-2px); }
+
+    .hero-visual { animation: fadeUp .7s .15s ease both; }
+    .hero-product-card {
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 24px 64px rgba(14,165,233,0.18);
+      position: relative;
+    }
+    .hero-product-img {
+      width: 100%; aspect-ratio: 4/3;
+      background: linear-gradient(135deg, var(--sky-light), #dbeafe);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 6rem; margin-bottom: 20px;
+    }
+    .hero-product-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 1.2rem; margin-bottom: 6px;
+    }
+    .hero-product-price {
+      font-size: 1.5rem; font-weight: 700; color: var(--sky);
+    }
+    .hero-product-badge {
+      position: absolute; top: 20px; right: 20px;
+      background: var(--accent); color: white;
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .hero-stats {
+      display: flex; gap: 24px; margin-top: 20px;
+      padding-top: 20px; border-top: 1px solid var(--border);
+    }
+    .stat { text-align: center; }
+    .stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--ink); }
+    .stat-label { font-size: 0.75rem; color: var(--ink-soft); }
+
+    /* ── MARQUEE STRIP ── */
+    .marquee-strip {
+      background: var(--ink); color: white;
+      padding: 14px 0; overflow: hidden;
+    }
+    .marquee-track {
+      display: flex; gap: 60px;
+      animation: marquee 22s linear infinite;
+      width: max-content;
+    }
+    .marquee-item {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.85rem; font-weight: 500; white-space: nowrap;
+      opacity: 0.9;
+    }
+    .marquee-item::before { content: "✦"; color: var(--sky); font-size: 0.7rem; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── CATEGORIES ── */
+    .section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--sky);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800; margin-bottom: 8px;
+    }
+    .section-sub { color: var(--ink-soft); font-size: 1rem; margin-bottom: 40px; }
+
+    .categories-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .category-card {
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      cursor: pointer;
+      transition: transform .25s, box-shadow .25s;
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+    .category-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+    .category-card.sky { background: linear-gradient(135deg, #e0f2fe, #bae6fd); }
+    .category-card.amber { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+    .category-card.green { background: linear-gradient(135deg, #dcfce7, #bbf7d0); }
+    .category-card.purple { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+    .category-icon { font-size: 2.4rem; margin-bottom: 12px; }
+    .category-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .category-count { font-size: 0.8rem; color: var(--ink-soft); }
+
+    /* ── FEATURED PRODUCTS ── */
+    .products-section { background: var(--mist); padding: 80px 0; }
+    .products-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+    .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+    .product-card {
+      background: white; border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+      cursor: pointer;
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,0,0,0.10); }
+    .product-img {
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+    }
+    .product-img.sky { background: linear-gradient(135deg, #e0f2fe, #bae6fd); }
+    .product-img.amber { background: linear-gradient(135deg, #fef3c7, #fed7aa); }
+    .product-img.green { background: linear-gradient(135deg, #dcfce7, #a7f3d0); }
+    .product-body { padding: 20px; }
+    .product-tag {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--sky); margin-bottom: 8px;
+    }
+    .product-name {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+      margin-bottom: 6px; line-height: 1.3;
+    }
+    .product-desc { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 16px; line-height: 1.6; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; }
+    .product-price { font-size: 1.2rem; font-weight: 700; color: var(--ink); }
+    .product-price span { font-size: 0.85rem; font-weight: 400; color: #94a3b8; text-decoration: line-through; margin-left: 6px; }
+    .btn-add {
+      background: var(--sky-light); color: var(--sky);
+      border: none; border-radius: 8px;
+      padding: 8px 16px; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: all .2s;
+    }
+    .btn-add:hover { background: var(--sky); color: white; }
+
+    /* ── BANNER ── */
+    .banner {
+      background: linear-gradient(135deg, var(--sky) 0%, var(--sky-dark) 100%);
+      color: white; border-radius: 24px;
+      padding: 56px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 40px;
+      margin: 80px 40px;
+      max-width: 1200px; margin-left: auto; margin-right: auto;
+      position: relative; overflow: hidden;
+    }
+    .banner::before {
+      content: "";
+      position: absolute; top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .banner-text { position: relative; }
+    .banner-kicker { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; opacity: 0.8; margin-bottom: 10px; }
+    .banner-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; margin-bottom: 10px; line-height: 1.15; }
+    .banner-sub { opacity: 0.85; font-size: 1rem; }
+    .btn-white {
+      background: white; color: var(--sky);
+      border: none; border-radius: 12px;
+      padding: 14px 36px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      white-space: nowrap; flex-shrink: 0;
+      transition: all .2s; text-decoration: none; display: inline-block;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.2); }
+
+    /* ── TRUST STRIP ── */
+    .trust-strip {
+      padding: 60px 40px;
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+    }
+    .trust-item { text-align: center; }
+    .trust-icon { font-size: 2rem; margin-bottom: 12px; }
+    .trust-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+    .trust-text { font-size: 0.82rem; color: var(--ink-soft); line-height: 1.5; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink); color: #94a3b8;
+      padding: 48px 40px 28px;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-brand-name {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 1.4rem; color: white; margin-bottom: 12px;
+    }
+    .footer-brand-name span { color: var(--sky); }
+    .footer-brand-desc { font-size: 0.85rem; line-height: 1.7; margin-bottom: 16px; }
+    .footer-col-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: white; margin-bottom: 16px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { color: #94a3b8; text-decoration: none; font-size: 0.85rem; transition: color .2s; }
+    .footer-links a:hover { color: var(--sky); }
+    .footer-bottom {
+      border-top: 1px solid #1e293b;
+      padding-top: 24px;
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.8rem;
+    }
+    .gcp-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #1e293b; border-radius: 8px; padding: 6px 14px;
+      font-size: 0.75rem; font-weight: 600; color: #94a3b8;
+    }
+    .gcp-badge::before { content: "☁️"; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) {
+      .hero-content { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .categories-grid { grid-template-columns: repeat(2, 1fr); }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .trust-strip { grid-template-columns: repeat(2, 1fr); }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .banner { flex-direction: column; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero-content { padding: 60px 20px; }
+      .products-grid { grid-template-columns: 1fr; }
+      .categories-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">🛒 ZBest<span>Buy</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="about.html">About Us</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="products.html" class="btn-cart">🛒 Shop Now</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-circle c1"></div>
+  <div class="hero-bg-circle c2"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">New Arrivals 2025</div>
+      <h1 class="hero-title">Tech Gear<br><em>Elevated</em><br>for You</h1>
+      <p class="hero-subtitle">Discover curated gadgets, accessories, and smart devices. Premium quality, delivered fast — powered by a global cloud infrastructure.</p>
+      <div class="hero-ctas">
+        <a href="products.html" class="btn-primary">Browse Products →</a>
+        <a href="about.html" class="btn-secondary">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-product-card">
+        <div class="hero-product-badge">⭐ Best Seller</div>
+        <div class="hero-product-img">🎧</div>
+        <div class="hero-product-name">CloudAudio Pro Headphones</div>
+        <div class="hero-product-price">$89.99 <span style="font-size:.9rem;font-weight:400;color:#94a3b8;text-decoration:line-through;">$129.99</span></div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Rating</div></div>
+          <div class="stat"><div class="stat-num">2.4k</div><div class="stat-label">Sold</div></div>
+          <div class="stat"><div class="stat-num">12+</div><div class="stat-label">Colors</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span class="marquee-item">Free Shipping Over $50</span>
+    <span class="marquee-item">30-Day Returns</span>
+    <span class="marquee-item">Global Cloud CDN</span>
+    <span class="marquee-item">Auto-Scaled Infrastructure</span>
+    <span class="marquee-item">Secure Checkout</span>
+    <span class="marquee-item">24/7 Support</span>
+    <span class="marquee-item">100% Authentic Products</span>
+    <span class="marquee-item">Free Shipping Over $50</span>
+    <span class="marquee-item">30-Day Returns</span>
+    <span class="marquee-item">Global Cloud CDN</span>
+    <span class="marquee-item">Auto-Scaled Infrastructure</span>
+    <span class="marquee-item">Secure Checkout</span>
+    <span class="marquee-item">24/7 Support</span>
+    <span class="marquee-item">100% Authentic Products</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="section">
+  <div class="section-label">Shop by Category</div>
+  <h2 class="section-title">What are you looking for?</h2>
+  <p class="section-sub">Browse our top categories and find what fits your lifestyle.</p>
+  <div class="categories-grid">
+    <a href="products.html?category=audio" class="category-card sky">
+      <div class="category-icon">🎧</div>
+      <div class="category-name">Audio</div>
+      <div class="category-count">12 products</div>
+    </a>
+    <a href="products.html?category=wearables" class="category-card amber">
+      <div class="category-icon">⌚</div>
+      <div class="category-name">Wearables</div>
+      <div class="category-count">8 products</div>
+    </a>
+    <a href="products.html?category=accessories" class="category-card green">
+      <div class="category-icon">🔌</div>
+      <div class="category-name">Accessories</div>
+      <div class="category-count">20 products</div>
+    </a>
+    <a href="products.html?category=smart-home" class="category-card purple">
+      <div class="category-icon">💡</div>
+      <div class="category-name">Smart Home</div>
+      <div class="category-count">15 products</div>
+    </a>
+  </div>
+</div>
+
+<!-- FEATURED PRODUCTS -->
+<section class="products-section">
+  <div class="products-inner">
+    <div class="section-label">Featured</div>
+    <h2 class="section-title">Top Picks This Week</h2>
+    <p class="section-sub">Handpicked by our team — best value and quality.</p>
+    <div class="products-grid">
+
+      <a href="product-detail.html?id=1" class="product-card">
+        <div class="product-img sky">🎧</div>
+        <div class="product-body">
+          <div class="product-tag">Audio</div>
+          <div class="product-name">CloudAudio Pro Headphones</div>
+          <div class="product-desc">40-hour battery, active noise cancellation, premium sound for all-day listening.</div>
+          <div class="product-footer">
+            <div class="product-price">$89.99 <span>$129.99</span></div>
+            <button class="btn-add">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=2" class="product-card">
+        <div class="product-img amber">⌚</div>
+        <div class="product-body">
+          <div class="product-tag">Wearables</div>
+          <div class="product-name">ZBB Watch Series 3</div>
+          <div class="product-desc">GPS tracking, heart rate monitor, sleep analysis and 5-day battery life.</div>
+          <div class="product-footer">
+            <div class="product-price">$149.99 <span>$199.99</span></div>
+            <button class="btn-add">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=3" class="product-card">
+        <div class="product-img green">🔋</div>
+        <div class="product-body">
+          <div class="product-tag">Accessories</div>
+          <div class="product-name">TurboCharge 20K Power Bank</div>
+          <div class="product-desc">20,000mAh, 65W fast charge, USB-C & USB-A dual output — charge anything.</div>
+          <div class="product-footer">
+            <div class="product-price">$39.99 <span>$59.99</span></div>
+            <button class="btn-add">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+    </div>
+    <div style="text-align:center; margin-top:40px;">
+      <a href="products.html" class="btn-primary">View All Products →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROMO BANNER -->
+<div class="banner">
+  <div class="banner-text">
+    <div class="banner-kicker">Limited Time</div>
+    <div class="banner-title">Summer Sale — Up to 40% Off</div>
+    <div class="banner-sub">New deals added daily. Don't miss out on top-rated tech at unbeatable prices.</div>
+  </div>
+  <a href="products.html" class="btn-white">Shop the Sale</a>
+</div>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-item">
+    <div class="trust-icon">🚚</div>
+    <div class="trust-title">Free Shipping</div>
+    <div class="trust-text">On all orders over $50. Fast delivery to your door worldwide.</div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">🔄</div>
+    <div class="trust-title">Easy Returns</div>
+    <div class="trust-text">30-day no-questions-asked return policy on all products.</div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">🔒</div>
+    <div class="trust-title">Secure Payment</div>
+    <div class="trust-text">Industry-standard encryption keeps your data safe.</div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">💬</div>
+    <div class="trust-title">24/7 Support</div>
+    <div class="trust-text">Our team is always here to help — chat, email, or phone.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">🛒 ZBest<span>Buy</span></div>
+      <div class="footer-brand-desc">A cloud-powered e-commerce experience built on Google Cloud Platform with global load balancing and auto-scaling infrastructure.</div>
+      <div class="gcp-badge">Hosted on Google Cloud Platform</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Shop</div>
+      <ul class="footer-links">
+        <li><a href="products.html">All Products</a></li>
+        <li><a href="products.html?category=audio">Audio</a></li>
+        <li><a href="products.html?category=wearables">Wearables</a></li>
+        <li><a href="products.html?category=smart-home">Smart Home</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Support</div>
+      <ul class="footer-links">
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Shipping Info</a></li>
+        <li><a href="#">Returns</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 ZBestBuy. Class project demo.</span>
+    <span>Cloud Computing · Google Cloud Platform</span>
+  </div>
+</footer>
+
+</body>
+</html>

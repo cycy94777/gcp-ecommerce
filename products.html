@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Products — ZBestBuy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sky: #0ea5e9;
+      --sky-dark: #0369a1;
+      --sky-light: #e0f2fe;
+      --ink: #0f172a;
+      --ink-soft: #334155;
+      --mist: #f1f5f9;
+      --white: #ffffff;
+      --accent: #f97316;
+      --accent-light: #fff7ed;
+      --border: #e2e8f0;
+      --shadow: 0 4px 24px rgba(14,165,233,0.10);
+      --radius: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--mist);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.5rem;
+      color: var(--sky); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-logo span { color: var(--ink); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--ink-soft); text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--sky); }
+    .btn-cart {
+      background: var(--sky); color: white;
+      border: none; border-radius: 10px;
+      padding: 9px 22px; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: background .2s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-cart:hover { background: var(--sky-dark); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: linear-gradient(135deg, #0f172a 0%, #0c2a4a 100%);
+      padding: 52px 40px 40px;
+    }
+    .page-header-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: #94a3b8; margin-bottom: 16px;
+    }
+    .breadcrumb a { color: #94a3b8; text-decoration: none; }
+    .breadcrumb a:hover { color: var(--sky); }
+    .breadcrumb span { color: white; }
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 2.2rem; color: white; margin-bottom: 8px;
+    }
+    .page-subtitle { color: #94a3b8; font-size: 1rem; }
+
+    /* ── MAIN LAYOUT ── */
+    .main-layout {
+      max-width: 1200px; margin: 0 auto;
+      padding: 40px 40px;
+      display: grid; grid-template-columns: 260px 1fr; gap: 32px;
+    }
+
+    /* ── SIDEBAR FILTERS ── */
+    .sidebar { display: flex; flex-direction: column; gap: 24px; }
+    .filter-card {
+      background: white; border-radius: var(--radius);
+      padding: 24px;
+    }
+    .filter-title {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 0.9rem; color: var(--ink); margin-bottom: 16px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+
+    .filter-search {
+      position: relative; margin-bottom: 20px;
+    }
+    .filter-search input {
+      width: 100%; padding: 10px 16px 10px 38px;
+      border: 1px solid var(--border); border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
+      background: var(--mist); color: var(--ink);
+      outline: none; transition: border-color .2s;
+    }
+    .filter-search input:focus { border-color: var(--sky); background: white; }
+    .filter-search::before {
+      content: "🔍"; position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      font-size: 0.8rem; pointer-events: none;
+    }
+
+    .filter-options { display: flex; flex-direction: column; gap: 10px; }
+    .filter-option {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; padding: 6px 8px; border-radius: 8px;
+      transition: background .15s;
+    }
+    .filter-option:hover { background: var(--mist); }
+    .filter-option input[type="checkbox"] {
+      accent-color: var(--sky); width: 16px; height: 16px; cursor: pointer;
+    }
+    .filter-option-label { font-size: 0.875rem; color: var(--ink-soft); flex: 1; }
+    .filter-option-count {
+      font-size: 0.75rem; color: #94a3b8;
+      background: var(--mist); border-radius: 100px;
+      padding: 2px 8px;
+    }
+
+    .price-range { display: flex; flex-direction: column; gap: 10px; }
+    .price-inputs { display: flex; gap: 10px; align-items: center; }
+    .price-inputs input {
+      flex: 1; padding: 8px 12px; border: 1px solid var(--border);
+      border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      background: var(--mist); color: var(--ink); outline: none; transition: border-color .2s;
+    }
+    .price-inputs input:focus { border-color: var(--sky); background: white; }
+    .price-inputs span { color: #94a3b8; font-size: 0.85rem; }
+    .btn-apply {
+      background: var(--sky); color: white;
+      border: none; border-radius: 8px;
+      padding: 9px; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: background .2s; width: 100%;
+    }
+    .btn-apply:hover { background: var(--sky-dark); }
+
+    .rating-options { display: flex; flex-direction: column; gap: 8px; }
+    .rating-option {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; padding: 6px 8px; border-radius: 8px;
+      transition: background .15s;
+    }
+    .rating-option:hover { background: var(--mist); }
+    .rating-option input { accent-color: var(--sky); cursor: pointer; }
+    .stars { color: #f59e0b; font-size: 0.85rem; }
+    .rating-label { font-size: 0.82rem; color: var(--ink-soft); }
+
+    .btn-clear {
+      background: none; color: #ef4444;
+      border: 1px solid #fca5a5; border-radius: 8px;
+      padding: 9px; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      width: 100%; transition: all .2s;
+    }
+    .btn-clear:hover { background: #fef2f2; }
+
+    /* ── PRODUCT CONTENT ── */
+    .content {}
+
+    .toolbar {
+      background: white; border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; gap: 16px;
+    }
+    .results-count { font-size: 0.875rem; color: var(--ink-soft); }
+    .results-count strong { color: var(--ink); }
+    .toolbar-right { display: flex; align-items: center; gap: 12px; }
+    .sort-select {
+      padding: 8px 14px; border: 1px solid var(--border);
+      border-radius: 8px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem; color: var(--ink); background: var(--mist);
+      outline: none; cursor: pointer; transition: border-color .2s;
+    }
+    .sort-select:focus { border-color: var(--sky); }
+    .view-toggle { display: flex; gap: 4px; }
+    .view-btn {
+      background: none; border: 1px solid var(--border);
+      border-radius: 7px; padding: 7px 10px; cursor: pointer;
+      font-size: 1rem; color: var(--ink-soft); transition: all .15s;
+    }
+    .view-btn.active { background: var(--sky); border-color: var(--sky); color: white; }
+
+    /* ── ACTIVE FILTERS ── */
+    .active-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .active-filter-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--sky-light); color: var(--sky-dark);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 0.78rem; font-weight: 600;
+    }
+    .active-filter-tag button {
+      background: none; border: none; cursor: pointer;
+      color: var(--sky); font-size: 0.75rem; font-weight: 700;
+      line-height: 1; padding: 0;
+    }
+
+    /* ── PRODUCTS GRID ── */
+    .products-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    }
+    .products-grid.list-view {
+      grid-template-columns: 1fr;
+    }
+
+    .product-card {
+      background: white; border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+      cursor: pointer; text-decoration: none; color: inherit;
+      display: block; position: relative;
+    }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.09); }
+    .product-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 2;
+      border-radius: 100px; padding: 4px 12px;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+    }
+    .badge-sale { background: var(--accent); color: white; }
+    .badge-new  { background: #22c55e; color: white; }
+    .badge-hot  { background: #ef4444; color: white; }
+
+    .product-img {
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem; position: relative;
+    }
+    .product-img.sky    { background: linear-gradient(135deg, #e0f2fe, #bae6fd); }
+    .product-img.amber  { background: linear-gradient(135deg, #fef3c7, #fed7aa); }
+    .product-img.green  { background: linear-gradient(135deg, #dcfce7, #a7f3d0); }
+    .product-img.purple { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+    .product-img.pink   { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+    .product-img.slate  { background: linear-gradient(135deg, #f1f5f9, #e2e8f0); }
+
+    .product-body { padding: 18px; }
+    .product-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--sky); margin-bottom: 6px; }
+    .product-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 5px; line-height: 1.3; }
+    .product-desc { font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .product-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .stars-small { color: #f59e0b; font-size: 0.75rem; }
+    .rating-num { font-size: 0.75rem; color: var(--ink-soft); }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; }
+    .product-price { font-size: 1.1rem; font-weight: 700; color: var(--ink); }
+    .product-price span { font-size: 0.8rem; font-weight: 400; color: #94a3b8; text-decoration: line-through; margin-left: 4px; }
+    .btn-add {
+      background: var(--sky-light); color: var(--sky);
+      border: none; border-radius: 8px;
+      padding: 8px 14px; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: all .2s;
+    }
+    .btn-add:hover { background: var(--sky); color: white; }
+
+    /* list view card styles */
+    .products-grid.list-view .product-card {
+      display: grid; grid-template-columns: 180px 1fr;
+    }
+    .products-grid.list-view .product-img { aspect-ratio: 1; height: 180px; }
+    .products-grid.list-view .product-body { display: flex; flex-direction: column; justify-content: center; }
+    .products-grid.list-view .product-desc { -webkit-line-clamp: 3; }
+
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 40px;
+    }
+    .page-btn {
+      background: white; border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 16px; font-size: 0.875rem;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      color: var(--ink-soft); transition: all .2s;
+    }
+    .page-btn:hover { border-color: var(--sky); color: var(--sky); }
+    .page-btn.active { background: var(--sky); border-color: var(--sky); color: white; font-weight: 700; }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink); color: #94a3b8;
+      padding: 32px 40px;
+      margin-top: 80px;
+    }
+    .footer-bottom-simple {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.8rem;
+    }
+    .footer-brand-name {
+      font-family: 'Syne', sans-serif; font-weight: 800; color: white;
+    }
+    .footer-brand-name span { color: var(--sky); }
+    .gcp-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #1e293b; border-radius: 8px; padding: 6px 14px;
+      font-size: 0.75rem; font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .product-card { animation: fadeIn .4s ease both; }
+
+    @media (max-width: 1000px) {
+      .main-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .page-header { padding: 36px 20px 28px; }
+      .main-layout { padding: 24px 16px; }
+      .products-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">🛒 ZBest<span>Buy</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="about.html">About Us</a></li>
+  </ul>
+  <div>
+    <a href="#" class="btn-cart">🛒 Cart (0)</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> › <span>Products</span>
+    </div>
+    <h1 class="page-title">All Products</h1>
+    <p class="page-subtitle">55 items · Free shipping on orders over $50</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="filter-card">
+      <div class="filter-search">
+        <input type="text" placeholder="Search products..." id="searchInput" oninput="filterProducts()" />
+      </div>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-title">Category</div>
+      <div class="filter-options">
+        <label class="filter-option">
+          <input type="checkbox" value="audio" onchange="filterProducts()" class="cat-filter"> 
+          <span class="filter-option-label">Audio</span>
+          <span class="filter-option-count">12</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" value="wearables" onchange="filterProducts()" class="cat-filter">
+          <span class="filter-option-label">Wearables</span>
+          <span class="filter-option-count">8</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" value="accessories" onchange="filterProducts()" class="cat-filter">
+          <span class="filter-option-label">Accessories</span>
+          <span class="filter-option-count">20</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" value="smart-home" onchange="filterProducts()" class="cat-filter">
+          <span class="filter-option-label">Smart Home</span>
+          <span class="filter-option-count">15</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-title">Price Range</div>
+      <div class="price-range">
+        <div class="price-inputs">
+          <input type="number" placeholder="Min $" id="priceMin" />
+          <span>–</span>
+          <input type="number" placeholder="Max $" id="priceMax" />
+        </div>
+        <button class="btn-apply" onclick="filterProducts()">Apply</button>
+      </div>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-title">Rating</div>
+      <div class="rating-options">
+        <label class="rating-option">
+          <input type="radio" name="rating" value="4">
+          <span class="stars">★★★★☆</span>
+          <span class="rating-label">4+ Stars</span>
+        </label>
+        <label class="rating-option">
+          <input type="radio" name="rating" value="3">
+          <span class="stars">★★★☆☆</span>
+          <span class="rating-label">3+ Stars</span>
+        </label>
+        <label class="rating-option">
+          <input type="radio" name="rating" value="0">
+          <span class="stars">★☆☆☆☆</span>
+          <span class="rating-label">All Ratings</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="filter-card">
+      <button class="btn-clear" onclick="clearFilters()">✕ Clear All Filters</button>
+    </div>
+
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <div class="toolbar">
+      <div class="results-count" id="resultsCount"><strong>12</strong> products found</div>
+      <div class="toolbar-right">
+        <select class="sort-select" id="sortSelect" onchange="filterProducts()">
+          <option value="default">Sort: Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Best Rated</option>
+          <option value="newest">Newest</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="gridBtn" onclick="setView('grid')" title="Grid view">⊞</button>
+          <button class="view-btn" id="listBtn" onclick="setView('list')" title="List view">☰</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="active-filters" id="activeFilters"></div>
+
+    <div class="products-grid" id="productsGrid">
+
+      <a href="product-detail.html?id=1" class="product-card" data-category="audio" data-price="89.99" data-rating="4.9" style="animation-delay:.05s">
+        <span class="product-badge badge-sale">Sale</span>
+        <div class="product-img sky">🎧</div>
+        <div class="product-body">
+          <div class="product-tag">Audio</div>
+          <div class="product-name">CloudAudio Pro Headphones</div>
+          <div class="product-desc">40-hour battery, active noise cancellation, Bluetooth 5.3 premium wireless audio.</div>
+          <div class="product-rating"><span class="stars-small">★★★★★</span><span class="rating-num">4.9 (2.4k)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$89.99 <span>$129.99</span></div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=2" class="product-card" data-category="wearables" data-price="149.99" data-rating="4.8" style="animation-delay:.10s">
+        <span class="product-badge badge-new">New</span>
+        <div class="product-img amber">⌚</div>
+        <div class="product-body">
+          <div class="product-tag">Wearables</div>
+          <div class="product-name">ZBB Watch Series 3</div>
+          <div class="product-desc">GPS, heart rate, SpO2, sleep tracking. 5-day battery, IP68 water resistant.</div>
+          <div class="product-rating"><span class="stars-small">★★★★★</span><span class="rating-num">4.8 (1.1k)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$149.99 <span>$199.99</span></div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=3" class="product-card" data-category="accessories" data-price="39.99" data-rating="4.7" style="animation-delay:.15s">
+        <span class="product-badge badge-sale">Sale</span>
+        <div class="product-img green">🔋</div>
+        <div class="product-body">
+          <div class="product-tag">Accessories</div>
+          <div class="product-name">TurboCharge 20K Power Bank</div>
+          <div class="product-desc">20,000mAh, 65W PD fast charge, dual USB-A + USB-C output.</div>
+          <div class="product-rating"><span class="stars-small">★★★★★</span><span class="rating-num">4.7 (890)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$39.99 <span>$59.99</span></div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=4" class="product-card" data-category="smart-home" data-price="29.99" data-rating="4.5" style="animation-delay:.20s">
+        <div class="product-img purple">💡</div>
+        <div class="product-body">
+          <div class="product-tag">Smart Home</div>
+          <div class="product-name">ZBB Smart Bulb 4-Pack</div>
+          <div class="product-desc">16M colors, voice control, schedule automation. Works with Alexa & Google Home.</div>
+          <div class="product-rating"><span class="stars-small">★★★★☆</span><span class="rating-num">4.5 (540)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$29.99</div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=5" class="product-card" data-category="audio" data-price="49.99" data-rating="4.6" style="animation-delay:.25s">
+        <span class="product-badge badge-hot">Hot</span>
+        <div class="product-img pink">🎵</div>
+        <div class="product-body">
+          <div class="product-tag">Audio</div>
+          <div class="product-name">CloudBuds Wireless Earbuds</div>
+          <div class="product-desc">True wireless, 8-hour playback + 24hr case, IPX5 sweat-proof, touch controls.</div>
+          <div class="product-rating"><span class="stars-small">★★★★★</span><span class="rating-num">4.6 (3.2k)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$49.99 <span>$79.99</span></div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=6" class="product-card" data-category="accessories" data-price="19.99" data-rating="4.4" style="animation-delay:.30s">
+        <div class="product-img slate">🖱️</div>
+        <div class="product-body">
+          <div class="product-tag">Accessories</div>
+          <div class="product-name">Precision Wireless Mouse</div>
+          <div class="product-desc">Silent clicks, 12-month battery, ergonomic grip, plug-and-play USB receiver.</div>
+          <div class="product-rating"><span class="stars-small">★★★★☆</span><span class="rating-num">4.4 (720)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$19.99</div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=7" class="product-card" data-category="wearables" data-price="79.99" data-rating="4.7" style="animation-delay:.35s">
+        <span class="product-badge badge-new">New</span>
+        <div class="product-img sky">👟</div>
+        <div class="product-body">
+          <div class="product-tag">Wearables</div>
+          <div class="product-name">StepTrack Fitness Band</div>
+          <div class="product-desc">14-day battery, 20 sport modes, always-on AMOLED display, stress tracking.</div>
+          <div class="product-rating"><span class="stars-small">★★★★★</span><span class="rating-num">4.7 (430)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$79.99 <span>$99.99</span></div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=8" class="product-card" data-category="smart-home" data-price="59.99" data-rating="4.8" style="animation-delay:.40s">
+        <div class="product-img green">📡</div>
+        <div class="product-body">
+          <div class="product-tag">Smart Home</div>
+          <div class="product-name">ZBB Smart Plug (2-Pack)</div>
+          <div class="product-desc">Energy monitoring, voice control, timer schedules, no hub required.</div>
+          <div class="product-rating"><span class="stars-small">★★★★★</span><span class="rating-num">4.8 (280)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$59.99</div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=9" class="product-card" data-category="accessories" data-price="34.99" data-rating="4.3" style="animation-delay:.45s">
+        <div class="product-img amber">⌨️</div>
+        <div class="product-body">
+          <div class="product-tag">Accessories</div>
+          <div class="product-name">Compact Mechanical Keyboard</div>
+          <div class="product-desc">TKL layout, blue switches, RGB backlight, USB-C detachable cable.</div>
+          <div class="product-rating"><span class="stars-small">★★★★☆</span><span class="rating-num">4.3 (610)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$34.99 <span>$49.99</span></div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=10" class="product-card" data-category="audio" data-price="24.99" data-rating="4.2" style="animation-delay:.50s">
+        <div class="product-img purple">🔊</div>
+        <div class="product-body">
+          <div class="product-tag">Audio</div>
+          <div class="product-name">MiniBlast Portable Speaker</div>
+          <div class="product-desc">360° sound, 12-hour battery, IP67 waterproof, built-in mic for calls.</div>
+          <div class="product-rating"><span class="stars-small">★★★★☆</span><span class="rating-num">4.2 (980)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$24.99</div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=11" class="product-card" data-category="smart-home" data-price="44.99" data-rating="4.6" style="animation-delay:.55s">
+        <div class="product-img pink">📷</div>
+        <div class="product-body">
+          <div class="product-tag">Smart Home</div>
+          <div class="product-name">CloudCam Indoor Security Camera</div>
+          <div class="product-desc">1080p, night vision, two-way audio, motion alerts, 30-day cloud storage.</div>
+          <div class="product-rating"><span class="stars-small">★★★★★</span><span class="rating-num">4.6 (370)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$44.99</div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product-detail.html?id=12" class="product-card" data-category="accessories" data-price="14.99" data-rating="4.1" style="animation-delay:.60s">
+        <div class="product-img slate">🔌</div>
+        <div class="product-body">
+          <div class="product-tag">Accessories</div>
+          <div class="product-name">USB-C Braided Cable 3-Pack</div>
+          <div class="product-desc">6ft, 60W fast charge support, nylon braided, compatible with all USB-C devices.</div>
+          <div class="product-rating"><span class="stars-small">★★★★☆</span><span class="rating-num">4.1 (1.5k)</span></div>
+          <div class="product-footer">
+            <div class="product-price">$14.99</div>
+            <button class="btn-add" onclick="event.preventDefault()">Add to Cart</button>
+          </div>
+        </div>
+      </a>
+
+    </div><!-- /products-grid -->
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <button class="page-btn" disabled>← Prev</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">Next →</button>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main-layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bottom-simple">
+    <div class="footer-brand-name">🛒 ZBest<span>Buy</span></div>
+    <div class="gcp-badge">☁️ Hosted on Google Cloud Platform</div>
+    <span>© 2025 ZBestBuy. Class project demo.</span>
+  </div>
+</footer>
+
+<script>
+  // View toggle
+  function setView(v) {
+    const grid = document.getElementById('productsGrid');
+    const gridBtn = document.getElementById('gridBtn');
+    const listBtn = document.getElementById('listBtn');
+    if (v === 'list') {
+      grid.classList.add('list-view');
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
+    } else {
+      grid.classList.remove('list-view');
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
+    }
+  }
+
+  // Filter & sort
+  function filterProducts() {
+    const search  = document.getElementById('searchInput').value.toLowerCase();
+    const minP    = parseFloat(document.getElementById('priceMin').value) || 0;
+    const maxP    = parseFloat(document.getElementById('priceMax').value) || Infinity;
+    const cats    = [...document.querySelectorAll('.cat-filter:checked')].map(c => c.value);
+    const sortVal = document.getElementById('sortSelect').value;
+
+    const cards = [...document.querySelectorAll('#productsGrid .product-card')];
+
+    let visible = cards.filter(card => {
+      const cat   = card.dataset.category;
+      const price = parseFloat(card.dataset.price);
+      const name  = card.querySelector('.product-name').textContent.toLowerCase();
+      const desc  = card.querySelector('.product-desc').textContent.toLowerCase();
+
+      const matchCat    = cats.length === 0 || cats.includes(cat);
+      const matchPrice  = price >= minP && price <= maxP;
+      const matchSearch = !search || name.includes(search) || desc.includes(search);
+
+      card.style.display = (matchCat && matchPrice && matchSearch) ? '' : 'none';
+      return matchCat && matchPrice && matchSearch;
+    });
+
+    // Sort
+    const grid = document.getElementById('productsGrid');
+    visible.sort((a, b) => {
+      if (sortVal === 'price-asc')  return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+      if (sortVal === 'price-desc') return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+      if (sortVal === 'rating')     return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+      return 0;
+    });
+    visible.forEach(c => grid.appendChild(c));
+
+    document.getElementById('resultsCount').innerHTML = `<strong>${visible.length}</strong> products found`;
+    updateActiveTags(cats, minP, maxP, search);
+  }
+
+  function updateActiveTags(cats, minP, maxP, search) {
+    const container = document.getElementById('activeFilters');
+    container.innerHTML = '';
+    cats.forEach(c => {
+      container.innerHTML += `<span class="active-filter-tag">${c} <button onclick="removeCatFilter('${c}')">✕</button></span>`;
+    });
+    if (minP > 0 || (maxP !== Infinity && maxP > 0)) {
+      container.innerHTML += `<span class="active-filter-tag">$${minP}–$${maxP === Infinity ? '∞' : maxP} <button onclick="clearPrice()">✕</button></span>`;
+    }
+    if (search) {
+      container.innerHTML += `<span class="active-filter-tag">"${search}" <button onclick="clearSearch()">✕</button></span>`;
+    }
+  }
+
+  function removeCatFilter(val) {
+    document.querySelectorAll('.cat-filter').forEach(cb => { if (cb.value === val) cb.checked = false; });
+    filterProducts();
+  }
+  function clearPrice() {
+    document.getElementById('priceMin').value = '';
+    document.getElementById('priceMax').value = '';
+    filterProducts();
+  }
+  function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    filterProducts();
+  }
+  function clearFilters() {
+    document.querySelectorAll('.cat-filter').forEach(cb => cb.checked = false);
+    clearPrice(); clearSearch();
+    document.getElementById('sortSelect').value = 'default';
+    filterProducts();
+  }
+
+  // Pre-select category from URL param
+  const params = new URLSearchParams(window.location.search);
+  const catParam = params.get('category');
+  if (catParam) {
+    const cb = document.querySelector(`.cat-filter[value="${catParam}"]`);
+    if (cb) { cb.checked = true; filterProducts(); }
+  }
+</script>
+</body>
+</html>
